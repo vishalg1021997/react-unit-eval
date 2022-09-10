@@ -1,23 +1,40 @@
 import logo from './logo.svg';
 import './App.css';
-
+import Navbar from './component/Navbar';
+import { Routes, Route } from "react-router-dom";
+import Login from './component/Login/Login';
+import Home from './component/Home/Home';
+import Product from './component/Product'
+import Edit from './component/Edit';
+import React from 'react'
+import { useNavigate } from "react-router-dom";
 function App() {
+  const navigate = useNavigate();
+  const [auth,setAuth] = React.useState(false)
+    const getlogin = () => {
+        fetch(`https://reqres.in/api/login`)
+        .then((res) => res.json())
+        .then((res) => setAuth(true))
+        setTimeout(() =>{
+          navigate(`/`);
+      },1000)
+    }
+
+    const handelLogin = () => {
+      getlogin()
+
+    }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar auth={auth} />
+      <Routes>
+          <Route path="/Login" element={<Login getlogin={getlogin}/>} />
+          <Route path="/" element={<Home />} />
+          <Route path='/product/:id' element={<Product />} />
+          <Route path='/edit/:id' element={<Edit />} />
+        </Routes>
+
     </div>
   );
 }
